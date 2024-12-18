@@ -8,9 +8,10 @@ const bearerAuth = require('./middleware/bearer');
 const router = express.Router();
 
 // ROUTES====================
+router.get('/', bearerAuth, checkAuthentication);
 router.post('/signup', signup);
 router.post('/login', basicAuth, login);
-router.get('/', bearerAuth, checkAuthentication);
+router.post('/logout', logout);
 
 // HANDLERS==================
 // Sign up
@@ -49,6 +50,12 @@ async function login(req, res, next) {
       user: req.user,
       token: req.user.token,
     };
+    res.cookie('jwt', user.token, {
+      httpOnly: true,        // Prevent access via JavaScript
+      secure: false,          // Use HTTPS
+      sameSite: 'None',    // Prevent CSRF
+      maxAge: 60 * 30 * 1000, // Token expiration time (30min (in miliseconds))
+    });
     res.status(200).json(user);
   } catch (err) {
     next(err);
@@ -57,7 +64,22 @@ async function login(req, res, next) {
 
 async function checkAuthentication(req, res, next) {
   try {
-    res.json({ message: 'User is logged in' });
+    res.cookie('jwt', req.user.token, {
+      httpOnly: true,        // Prevent access via JavaScript
+      secure: false,          // Use HTTPS
+      sameSite: 'None',    // Prevent CSRF
+      maxAge: 60 * 30 * 1000, // Token expiration time (30min (in miliseconds))
+    });
+    res.json(req.user);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function logout(req, res, next) {
+  try {
+    res.clearCookie('jwt'); // Clear the HTTP-only cookie
+    res.json({ message: 'Logged out successfully' });
   } catch (err) {
     next(err);
   }

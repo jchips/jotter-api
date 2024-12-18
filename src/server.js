@@ -2,7 +2,6 @@
 
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const handle400 = require('./errors/400');
 const handle500 = require('./errors/500');
 const jotterAuth = require('./jotter/auth/authRouter');
@@ -11,14 +10,13 @@ const accessControl = require('./jotter/auth/middleware/accessControl');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 
 const PORT = process.env.PORT;
 
 // default route
 app.get('/', (req, res) => res.status(200).send('default route is working'));
 
-app.use(accessControl);
+app.use(accessControl); // CORS
 
 // jotter routes
 app.use('/jotter', jotterAuth);

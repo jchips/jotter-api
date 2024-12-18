@@ -19,7 +19,7 @@ const userModel = (sequelize, DataTypes) => {
     token: {
       type: DataTypes.VIRTUAL,
       get() {
-        return jwt.sign({ email: this.email }, SECRET, { expiresIn: '1m' });
+        return jwt.sign({ email: this.email }, SECRET, { expiresIn: '30m' });
       },
     },
   });
@@ -34,7 +34,6 @@ const userModel = (sequelize, DataTypes) => {
   model.basicAuth = async function (email, password) {
     try {
       let user = await this.findOne({ where: { email } });
-      console.log('user.js:', user); // delete later
       const validateUser = await bcrypt.compare(password, user.password);
       if (validateUser) {
         return user;
