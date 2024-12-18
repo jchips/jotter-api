@@ -1,28 +1,53 @@
 'use strict';
 
 const express = require('express');
+const { Op } = require('sequelize');
 const { Note } = require('../models');
 const bearerAuth = require('../auth/middleware/bearer');
 
 const router = express.Router();
 
 // ROUTES====================
+router.get('/:noteId', bearerAuth, getNote);
+router.get('/', bearerAuth, getAllInRoot);
 router.get('/:folderId', bearerAuth, getAllInFolder);
 router.post('/', bearerAuth, addNote);
 router.patch('/:noteId', bearerAuth, updateNote);
 router.delete('/:noteId', bearerAuth, deleteNote);
 
 // HANDLERS==================
+async function getNote(req, res, next) {
+  try {
+    let { noteId } = req.params;
+    let note = await Note.findOne({ where: { id: noteId } });
+    res.status(200).json(note);
+  } catch (err) {
+    next(err);
+  }
+}
+async function getAllInRoot(req, res, next) {
+  try {
+    let allNotesInRoot = await Note.findAll({
+      where: {
+        userId: req.user.id,
+        folderId: { [Op.is]: null },
+      },
+    });
+    res.status(200).json(allNotesInRoot);
+  } catch (err) {
+    next(err);
+  }
+}
 async function getAllInFolder(req, res, next) {
   try {
     let { folderId } = req.params;
-    let allFilesInFolder = await Note.findAll({
+    let allNotesInFolder = await Note.findAll({
       where: {
         userId: req.user.id,
         folderId,
       },
     });
-    res.status(200).json(allFilesInFolder);
+    res.status(200).json(allNotesInFolder);
   } catch (err) {
     next(err);
   }

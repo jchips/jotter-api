@@ -14,13 +14,10 @@ async function basicAuth(req, res, next) {
       next('Invalid login');
     }
     let basic = req.headers.authorization.split(' '); // [ 'Basic', 'am9objpmb28=' ]
-    console.log('basic:', basic); // delete later
     let encodedLogin = basic.pop(); // 'am9objpmb28='
     let decodedLogin = base64.decode(encodedLogin); // 'username:password'
-    console.log('decodedLogin:', decodedLogin); // delete later
     let [email, password] = decodedLogin.split(':');
     let user = await User.basicAuth(email, password);
-    console.log('user:', user); // delete later
     req.user = user;
     next();
   } catch (err) {

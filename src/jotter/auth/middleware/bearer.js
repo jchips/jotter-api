@@ -15,13 +15,13 @@ async function bearerAuth(req, res, next) {
     }
     const bearer = req.headers.authorization.split(' '); // [ 'Bearer', 'token' ]
     const token = bearer.pop(); // 'token'
-    let user = User.bearerAuth(token);
+    let user = await User.bearerAuth(token);
     req.user = user;
     req.token = user.token;
     next();
   } catch (err) {
     console.error('bearer.js:', err.message);
-    next('Invalid login');
+    next(err.message);
   }
 }
 
