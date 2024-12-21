@@ -10,7 +10,7 @@ const router = express.Router();
 // ROUTES====================
 router.get('/:noteId', bearerAuth, getNote);
 router.get('/', bearerAuth, getAllInRoot);
-router.get('/:folderId', bearerAuth, getAllInFolder);
+router.get('/f/:folderId', bearerAuth, getAllInFolder);
 router.post('/', bearerAuth, addNote);
 router.patch('/:noteId', bearerAuth, updateNote);
 router.delete('/:noteId', bearerAuth, deleteNote);
@@ -32,20 +32,23 @@ async function getAllInRoot(req, res, next) {
         userId: req.user.id,
         folderId: { [Op.is]: null },
       },
+      order: [['createdAt', 'DESC']],
     });
     res.status(200).json(allNotesInRoot);
   } catch (err) {
     next(err);
   }
 }
+
 async function getAllInFolder(req, res, next) {
   try {
     let { folderId } = req.params;
     let allNotesInFolder = await Note.findAll({
       where: {
         userId: req.user.id,
-        folderId,
+        folderId: folderId === 'null' ? { [Op.is]: null } : folderId,
       },
+      order: [['createdAt', 'DESC']],
     });
     res.status(200).json(allNotesInFolder);
   } catch (err) {

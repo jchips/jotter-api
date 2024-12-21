@@ -7,7 +7,6 @@ module.exports = (req, res, next) => {
   const allowedOrigins = ['http://localhost:5173']; // add localhost for testing
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
-    console.log('here');
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials (cookies)
   }

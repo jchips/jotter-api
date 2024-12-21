@@ -1,22 +1,47 @@
 'use strict';
 
 const express = require('express');
+const { Op } = require('sequelize');
 const { Folder } = require('../models');
 const bearerAuth = require('../auth/middleware/bearer');
 
 const router = express.Router();
 
 // ROUTES====================
-router.get('/', bearerAuth, getFolders);
+router.get('/:folderId', bearerAuth, getFolder);
+router.get('/f/:parentId', bearerAuth, getFolders);
 router.post('/', bearerAuth, addFolder);
 router.patch('/:folderId', bearerAuth, updateFolder);
 router.delete('/:folderId', bearerAuth, deleteFolder);
 
 
 // HANDLERS==================
+async function getFolder(req, res, next) {
+  try {
+    let { folderId } = req.params;
+    let folder = await Folder.findOne({
+      where: {
+        userId: req.user.id,
+        id: folderId,
+      },
+    });
+    res.status(200).json(folder);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function getFolders(req, res, next) {
   try {
-    let allFolders = await Folder.findAll({ where: { userId: req.user.id } });
+    let { parentId } = req.params;
+    let query = {
+      where: {
+        userId: req.user.id,
+        parentId: parentId === 'null' ? { [Op.is]: null } : parentId,
+      },
+      order: [['createdAt', 'DESC']],
+    };
+    let allFolders = await Folder.findAll(query);
     res.status(200).json(allFolders);
   } catch (err) {
     next(err);
