@@ -54,7 +54,7 @@ async function login(req, res, next) {
       httpOnly: true,        // Prevent access via JavaScript
       secure: false,          // Use HTTPS
       sameSite: 'None',    // Prevent CSRF
-      maxAge: 60 * 30 * 1000, // Token expiration time (30min (in miliseconds))
+      maxAge: 60 * 60 * 24 * 1000, // Token expiration time (1 day (in miliseconds))
     });
     res.status(200).json(user);
   } catch (err) {

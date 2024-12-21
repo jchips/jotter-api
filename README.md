@@ -26,7 +26,8 @@ POST /jotter/logout
 Folders (all endpoints use bearer auth)
 
 ```javascript
-GET /jotter/folder
+GET /jotter/folder // get folder
+GET /jotter/folder/f/:parentId // get all folders in parent folder
 POST /jotter/folder
 PATCH /jotter/folder/:folderId
 DELETE /jotter/folder/:folderId
@@ -37,7 +38,7 @@ Notes (all endpoints use bearer auth)
 ```javascript
 GET /jotter/note/:noteId // get note
 GET /jotter/note // get notes in root folder
-GET /jotter/note/:folderId // get notes in folder
+GET /jotter/note/f/:folderId // get notes in folder
 POST /jotter/note
 PATCH /jotter/note/:noteId
 DELETE /jotter/note/:noteId
@@ -70,7 +71,7 @@ if `folderId` is null, that will add note to root folder.
 ```json
 {
   "title": "new-folder",
-  "userId": 1
+  "userId": 1,
   "parentId": 5,
   "path": {
     "id": 3,
@@ -80,5 +81,6 @@ if `folderId` is null, that will add note to root folder.
 
 ### Jotter Changelog
 
+- 0.0.4 (2024-12-21, 2:28am) - Users can add folders
 - 0.0.3 (2024-12-18, 3:20pm) - Users can add and edits notes
 - 0.0.1 (2024-12-15, 7:03pm) - First commit with working authentication
