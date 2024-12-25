@@ -28,6 +28,7 @@ Folders (all endpoints use bearer auth)
 ```javascript
 GET /jotter/folder // get folder
 GET /jotter/folder/f/:parentId // get all folders in parent folder
+GET /jotter/folder/all/:type/:folderId // get all folders that aren't current folder and that don't contain the current folder in the path (all outside folders)
 POST /jotter/folder
 PATCH /jotter/folder/:folderId
 DELETE /jotter/folder/:folderId
@@ -66,6 +67,17 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
+### `/note` PATCH request example (bearer auth)
+
+```json
+{
+  "title": "new-name",
+  "updatedAt": 1735094126343,
+}
+```
+
+`updatedAt` is of type DATETIME. This column is added to the database automatically when adding a folder or note.
+
 ### `/folder` POST request example (bearer auth)
 
 ```json
@@ -73,14 +85,40 @@ if `folderId` is null, that will add note to root folder.
   "title": "new-folder",
   "userId": 1,
   "parentId": 5,
-  "path": {
-    "id": 3,
-    "title": "shopping"
+  "path": [
+    {
+      "id": 3,
+      "title": "shopping"
+    }
+  ]
 },
+```
+
+`path` column automatically turns into type LONGTEXT in the database, so make sure to use `JSON.parse()` when grabbing path from database.
+
+### `/folder` PATCH request example (bearer auth)
+
+```json
+{
+  "title": "new-name",
+  "updatedAt": 1735094126343,
+}
+```
+
+### Another `/folder` PATH request example (bearer auth)
+
+```json
+{
+  "path": [
+    {"id": 3, "title": "shopping"},
+    {"id": 4, "title": "tasks"}
+  ]
+}
 ```
 
 ### Jotter Changelog
 
+- 1.0.0 (2024-12-24, 6:46pm) - Users can edit, move, and delete folders
 - 0.0.4 (2024-12-21, 2:28am) - Users can add folders
 - 0.0.3 (2024-12-18, 3:20pm) - Users can add and edits notes
 - 0.0.1 (2024-12-15, 7:03pm) - First commit with working authentication

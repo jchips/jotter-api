@@ -1,8 +1,9 @@
 'use strict';
 
 const express = require('express');
-const { Op } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const { Folder } = require('../models');
+const db = require('../db');
 const bearerAuth = require('../auth/middleware/bearer');
 
 const router = express.Router();
@@ -10,6 +11,7 @@ const router = express.Router();
 // ROUTES====================
 router.get('/:folderId', bearerAuth, getFolder);
 router.get('/f/:parentId', bearerAuth, getFolders);
+router.get('/all/:type/:folderId', bearerAuth, getAllOtherFolders);
 router.post('/', bearerAuth, addFolder);
 router.patch('/:folderId', bearerAuth, updateFolder);
 router.delete('/:folderId', bearerAuth, deleteFolder);
@@ -31,6 +33,7 @@ async function getFolder(req, res, next) {
   }
 }
 
+// Get all folders inside parent folder
 async function getFolders(req, res, next) {
   try {
     let { parentId } = req.params;
@@ -43,6 +46,53 @@ async function getFolders(req, res, next) {
     };
     let allFolders = await Folder.findAll(query);
     res.status(200).json(allFolders);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Get all folders from user that aren't the current folder and that don't
+ * contain the current folder in the path (aren't children/inner folders)
+ * TODO: switch to Sequelize literal instead of raw query
+ */
+async function getAllOtherFolders(req, res, next) {
+  try {
+    let { type, folderId } = req.params;
+    let folders;
+
+    if (folderId !== 'null') {
+      let folder = await Folder.findOne({
+        where: {
+          userId: req.user.id,
+          id: folderId,
+        },
+      });
+      let exclude = type === 'folder' ? `{"id":${folderId},"title":"${folder.title}"}` : null;
+      folders = await db.query(
+        `
+        SELECT * FROM Folders
+        WHERE userId = :userId
+          AND id != :folderId
+          AND path NOT LIKE :exclude
+        `,
+        {
+          replacements: {
+            userId: req.user.id,
+            folderId: folderId,
+            exclude: `%${exclude}%`,
+          },
+          type: db.QueryTypes.SELECT,
+        },
+      );
+    } else {
+      folders = await Folder.findAll({
+        where: {
+          userId: req.user.id,
+        },
+      });
+    }
+    res.status(200).json(folders);
   } catch (err) {
     next(err);
   }
@@ -73,7 +123,15 @@ async function updateFolder(req, res, next) {
 async function deleteFolder(req, res, next) {
   try {
     let { folderId } = req.params;
-    await Folder.destroy({ where: { id: folderId } });
+    await Folder.destroy({
+      where: {
+        [Op.or]: [
+          { id: folderId },
+          { parentId: folderId },
+          { path: { [Op.like]: Sequelize.literal(`'%"id":${folderId}%'`) } },
+        ],
+      },
+    });
     res.status(200).json({ message: 'deleted folder' });
   } catch (err) {
     next(err);
