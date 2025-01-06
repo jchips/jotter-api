@@ -4,7 +4,7 @@
 // Only have localhost origin on local copy (not production)
 // Code inspired from https://stackoverflow.com/questions/24897801/enable-access-control-allow-origin-for-multiple-domains-in-node-js
 module.exports = (req, res, next) => {
-  const allowedOrigins = ['http://localhost:5173']; // add localhost for testing
+  const allowedOrigins = ['https://jottermd.netlify.app', 'http://localhost:5173']; // add localhost for testing
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
