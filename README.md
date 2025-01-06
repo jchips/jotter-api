@@ -1,14 +1,14 @@
-# Server2
+# Jotter
 
 ## Description
 
-Server for Jotter.
+Server for Jotter app.
 
 ## Author: Jelani R
 
 ## Architecture
 
-Nodejs, MySQL, Express, JsonWebToken, Bcrypt, Base-64.
+Nodejs, MySQL, Sequelize, Express, JsonWebToken, Bcrypt, Base-64.
 
 ## Jotter API
 
@@ -94,7 +94,7 @@ if `folderId` is null, that will add note to root folder.
 },
 ```
 
-`path` column automatically turns into type LONGTEXT in the database, so make sure to use `JSON.parse()` when grabbing path from database.
+`path` column automatically turns into type LONGTEXT in the database, so be sure to use `JSON.parse()` when grabbing path from database.
 
 ### `/folder` PATCH request example (bearer auth)
 
@@ -116,7 +116,7 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
-### Jotter Changelog
+### Jotter API changelog
 
 - 1.0.0 (2024-12-24, 6:46pm) - Users can edit, move, and delete folders
 - 0.0.4 (2024-12-21, 2:28am) - Users can add folders
