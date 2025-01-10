@@ -16,7 +16,7 @@ const PORT = process.env.PORT;
 // default route
 app.get('/', (req, res) => res.status(200).send('default route is working'));
 
-// app.use(accessControl); // CORS
+// app.use(accessControl); // CORS (only use for localhost testing)
 
 // jotter routes
 app.use('/jotter', jotterAuth);
