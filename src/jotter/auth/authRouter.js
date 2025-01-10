@@ -51,9 +51,9 @@ async function login(req, res, next) {
       token: req.user.token,
     };
     res.cookie('jwt', user.token, {
-      httpOnly: true,        // Prevent access via JavaScript
-      secure: false,          // Use HTTPS
-      sameSite: 'None',    // Prevent CSRF
+      httpOnly: true, // Prevent access via JavaScript
+      secure: false, // Use HTTPS
+      sameSite: 'None', // Prevent CSRF
       maxAge: 60 * 60 * 24 * 1000, // Token expiration time (1 day (in miliseconds))
     });
     res.status(200).json(user);
@@ -64,13 +64,17 @@ async function login(req, res, next) {
 
 async function checkAuthentication(req, res, next) {
   try {
-    res.cookie('jwt', req.user.token, {
-      httpOnly: true,        // Prevent access via JavaScript
-      secure: false,          // Use HTTPS
-      sameSite: 'None',    // Prevent CSRF
-      maxAge: 60 * 30 * 1000, // Token expiration time (30min (in miliseconds))
-    });
-    res.json(req.user);
+    if (req.user.token) {
+      res.cookie('jwt', req.user.token, {
+        httpOnly: true, // Prevent access via JavaScript
+        secure: false, // Use HTTPS
+        sameSite: 'None', // Prevent CSRF
+        maxAge: 60 * 30 * 1000, // Token expiration time (30min (in miliseconds))
+      });
+      res.status(200).json(req.user);
+    } else {
+      res.status(403).json({ message: 'not authorized' });
+    }
   } catch (err) {
     next(err);
   }
