@@ -2,15 +2,17 @@
 
 ## Description
 
-Server for Jotter app.
+Server for Jotter web and Android app.
 
 ## Author: Jelani R
 
 ## Architecture
 
+Language: JavaScript
+
 Nodejs, MySQL, Sequelize, Express, JsonWebToken, Bcrypt, Base-64.
 
-## Jotter API
+## API
 
 ### Endpoints
 
@@ -105,7 +107,7 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
-### Another `/folder` PATH request example (bearer auth)
+### Another `/folder` PATCH request example (bearer auth)
 
 ```json
 {
@@ -116,7 +118,7 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
-### Jotter API changelog
+### Changelog
 
 - 1.0.0 (2024-12-24, 6:46pm) - Users can edit, move, and delete folders
 - 0.0.4 (2024-12-21, 2:28am) - Users can add folders
