@@ -5,10 +5,12 @@ const { DataTypes } = require('sequelize');
 const userModel = require('../auth/user');
 const folderModel = require('./folder');
 const noteModel = require('./note');
+const configModel = require('./config');
 
 const User = userModel(db, DataTypes);
 const Folder = folderModel(db, DataTypes);
 const Note = noteModel(db, DataTypes);
+const Config = configModel(db, DataTypes);
 
 //  ONE-TO-MANY RELATIONS==================
 
@@ -48,8 +50,21 @@ Note.belongsTo(User, {
   onUpdate: 'CASCADE',
 });
 
+// User-Config
+User.hasMany(Config, {
+  foreignKey: 'userId',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+Config.belongsTo(User, {
+  foreignKey: 'userId',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
 module.exports = {
   User,
   Folder,
   Note,
+  Config,
 };
