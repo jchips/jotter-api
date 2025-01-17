@@ -33,13 +33,18 @@ const ConfigModel = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'createdByAsc',
     },
+    hidePreview: {
+      type: DataTypes.BOOL,
+      allowNull: false,
+      defaultValue: false,
+    },
     fontSize: {
       type: DataTypes.ENUM('12', '13', '14', '15', '16'),
       allowNull: false,
       defaultValue: '14',
     },
     gridSize: {
-      type: DataTypes.ENUM('1', '2', '3'),
+      type: DataTypes.ENUM('1', '2', '3', '4'),
       allowNull: false,
       defaultValue: '3',
     },
