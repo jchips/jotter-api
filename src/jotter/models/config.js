@@ -19,22 +19,22 @@ const ConfigModel = (sequelize, DataTypes) => {
       defaultValue: 'auto',
     },
     highlightActiveLine: {
-      type: DataTypes.BOOL,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
     hideWordCount: {
-      type: DataTypes.BOOL,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
     sort: {
-      type: DataTypes.BOOL,
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'createdByAsc',
     },
     hidePreview: {
-      type: DataTypes.BOOL,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },

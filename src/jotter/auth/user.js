@@ -3,6 +3,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const SECRET = process.env.SECRET;
 
 const userModel = (sequelize, DataTypes) => {
@@ -31,8 +32,10 @@ const userModel = (sequelize, DataTypes) => {
 
   // hashes the user's password
   model.beforeCreate(async (user) => {
-    let hashedPass = await bcrypt.hash(user.password, 10);
+    const hashedPass = await bcrypt.hash(user.password, 10);
+    const salt = crypto.randomBytes(16).toString('hex');
     user.password = hashedPass;
+    user.salt = salt;
   });
 
   // basic auth for user login
