@@ -32,6 +32,6 @@ jobs:
           echo "DB_HOST=$DB_HOST" >> $GITHUB_ENV
           echo "DB_PASS=$DB_PASS" >> $GITHUB_ENV
           echo "SECRET=$SECRET" >> $GITHUB_ENV
-          # npm test
+          npm test
         env:
           CI: true
