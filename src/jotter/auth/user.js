@@ -3,7 +3,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const SECRET = process.env.SECRET;
 
 const userModel = (sequelize, DataTypes) => {
@@ -23,19 +22,12 @@ const userModel = (sequelize, DataTypes) => {
         return jwt.sign({ email: this.email }, SECRET, { expiresIn: '1 day' });
       },
     },
-    salt: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
-    },
   });
 
   // hashes the user's password
   model.beforeCreate(async (user) => {
     const hashedPass = await bcrypt.hash(user.password, 10);
-    const salt = crypto.randomBytes(16).toString('hex');
     user.password = hashedPass;
-    user.salt = salt;
   });
 
   // basic auth for user login

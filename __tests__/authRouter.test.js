@@ -44,7 +44,7 @@ describe('Login', () => {
   test('/signin with basic authentication headers logs in a user and sends an object with the user and the token to the client', async () => {
     let response = await request.post('/jotter/login').auth(person.email, person.password);
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toBe(200);
     expect(response.body.token).toBeDefined();
     expect(response.body.user.id).toBeDefined();
     expect(response.body.user.email).toEqual(person.email);
