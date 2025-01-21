@@ -45,6 +45,13 @@ describe('Folders', () => {
     expect(response.body.title).toEqual('first-folder');
   });
 
+  test('/getFolder - user cannot access another user\'s folder', async () => {
+    let response = await request.get('/jotter/folder/1').set('Authorization', `Bearer ${user2.token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeNull();
+  });
+
   test('/folder - create a folder in root (home) folder', async () => {
     let newFolder = {
       title: 'second-folder',
@@ -91,10 +98,11 @@ describe('Folders', () => {
     expect(response.body[0].path).toEqual([{ id: 1, title: 'first-folder' }]);
   });
 
-  test('/getFolder - user cannot access another user\'s folder', async () => {
-    let response = await request.get('/jotter/folder/1').set('Authorization', `Bearer ${user2.token}`);
+  test('/getAllOtherFolders - gets all folders that are not inner folders of specified folder and not the specified folder itself', async () => {
+    let response = await request.get('/jotter/folder/all/folder/1').set('Authorization', `Bearer ${user1.token}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toBeNull();
+    expect(response.body.length).toEqual(1);
+    expect(response.body[0].title).toEqual('second-folder');
   });
 });
