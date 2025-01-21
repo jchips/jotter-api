@@ -6,6 +6,7 @@ const ConfigModel = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       foreignKey: true,
+      unique: true,
       references: {
         model: 'Users',
         key: 'id',
@@ -19,24 +20,29 @@ const ConfigModel = (sequelize, DataTypes) => {
       defaultValue: 'auto',
     },
     highlightActiveLine: {
-      type: DataTypes.BOOL,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
     hideWordCount: {
-      type: DataTypes.BOOL,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
     sort: {
-      type: DataTypes.BOOL,
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'createdByAsc',
     },
     hidePreview: {
-      type: DataTypes.BOOL,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
+    },
+    font: {
+      type: DataTypes.ENUM('Inter'),
+      allowNull: false,
+      defaultValue: 'Inter',
     },
     fontSize: {
       type: DataTypes.ENUM('12', '13', '14', '15', '16'),

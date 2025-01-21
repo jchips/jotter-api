@@ -22,16 +22,11 @@ const userModel = (sequelize, DataTypes) => {
         return jwt.sign({ email: this.email }, SECRET, { expiresIn: '1 day' });
       },
     },
-    salt: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
-    },
   });
 
   // hashes the user's password
   model.beforeCreate(async (user) => {
-    let hashedPass = await bcrypt.hash(user.password, 10);
+    const hashedPass = await bcrypt.hash(user.password, 10);
     user.password = hashedPass;
   });
 

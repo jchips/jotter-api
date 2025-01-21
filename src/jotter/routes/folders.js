@@ -62,13 +62,6 @@ async function getAllOtherFolders(req, res, next) {
     let folders;
 
     if (folderId !== 'null') {
-      // let folder = await Folder.findOne({
-      //   where: {
-      //     userId: req.user.id,
-      //     id: folderId,
-      //   },
-      // });
-      // let exclude = type === 'folder' ? `{"id":${folderId},"title":"${folder.title}"}` : null;
       let exclude = type === 'folder' ? `{"id":${folderId}` : null;
       folders = await db.query(
         `
