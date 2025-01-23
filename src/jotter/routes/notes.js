@@ -2,8 +2,9 @@
 
 const express = require('express');
 const { Op } = require('sequelize');
-const { Note } = require('../models');
+const { Note, Config } = require('../models');
 const bearerAuth = require('../auth/middleware/bearer');
+const sort = require('../util/sort');
 
 const router = express.Router();
 
@@ -27,12 +28,14 @@ async function getNote(req, res, next) {
 }
 async function getAllInRoot(req, res, next) {
   try {
+    let uConfigs = await Config.findOne({ where: { userId: req.user.id } });
+    let order = sort(uConfigs.sort);
     let allNotesInRoot = await Note.findAll({
       where: {
         userId: req.user.id,
         folderId: { [Op.is]: null },
       },
-      order: [['createdAt', 'DESC']],
+      order: order,
     });
     res.status(200).json(allNotesInRoot);
   } catch (err) {
@@ -43,12 +46,14 @@ async function getAllInRoot(req, res, next) {
 async function getAllInFolder(req, res, next) {
   try {
     let { folderId } = req.params;
+    let uConfigs = await Config.findOne({ where: { userId: req.user.id } });
+    let order = sort(uConfigs.sort);
     let allNotesInFolder = await Note.findAll({
       where: {
         userId: req.user.id,
         folderId: folderId === 'null' ? { [Op.is]: null } : folderId,
       },
-      order: [['createdAt', 'DESC']],
+      order: order,
     });
     res.status(200).json(allNotesInFolder);
   } catch (err) {

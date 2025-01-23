@@ -32,7 +32,7 @@ const ConfigModel = (sequelize, DataTypes) => {
     sort: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'createdByAsc',
+      defaultValue: '1',
     },
     hidePreview: {
       type: DataTypes.BOOLEAN,

@@ -8,9 +8,9 @@ const noteModel = (sequelize, DataTypes) => {
       defaultValue: 'untitled' + DataTypes.NOW,
     },
     content: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: '',
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
+      defaultValue: '', // remove if db doesn't support
     },
     userId: {
       type: DataTypes.INTEGER,

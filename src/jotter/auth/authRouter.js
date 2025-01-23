@@ -1,7 +1,8 @@
 'use strict';
 
 const express = require('express');
-const { User } = require('../models');
+const { User, Config } = require('../models');
+const db = require('../db');
 const basicAuth = require('./middleware/basic');
 const bearerAuth = require('./middleware/bearer');
 
@@ -16,15 +17,22 @@ router.post('/logout', logout);
 // HANDLERS==================
 // Sign up
 async function signup(req, res, next) {
+  let transaction;
   try {
+    transaction = await db.transaction();
     let signupInfo = req.body;
     let emailTaken = await checkForEmail(req.body.email);
     if (emailTaken) {
       return res.json({ message: 'email is already being used' });
     }
-    let newUser = await User.create(signupInfo);
+    let newUser = await User.create(signupInfo, { transaction });
+    let newConfigs = { userId: newUser.id };
+    await Config.create(newConfigs, { transaction });
+    await transaction.commit();
     res.status(201).json(newUser);
   } catch (err) {
+    if (transaction) await transaction.rollback();
+    console.error(err);
     next(err);
   }
 }
