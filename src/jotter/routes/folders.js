@@ -2,9 +2,10 @@
 
 const express = require('express');
 const { Sequelize, Op } = require('sequelize');
-const { Folder } = require('../models');
+const { Folder, Config } = require('../models');
 const db = require('../db');
 const bearerAuth = require('../auth/middleware/bearer');
+const sort = require('../util/sort');
 
 const router = express.Router();
 
@@ -37,12 +38,14 @@ async function getFolder(req, res, next) {
 async function getFolders(req, res, next) {
   try {
     let { parentId } = req.params;
+    let uConfigs = await Config.findOne({ where: { userId: req.user.id } });
+    let order = uConfigs ? sort(uConfigs.sort) : [['createdAt', 'DESC']];
     let query = {
       where: {
         userId: req.user.id,
         parentId: parentId === 'null' ? { [Op.is]: null } : parentId,
       },
-      order: [['createdAt', 'DESC']],
+      order: order,
     };
     let allFolders = await Folder.findAll(query);
     res.status(200).json(allFolders);
@@ -62,7 +65,7 @@ async function getAllOtherFolders(req, res, next) {
     let folders;
 
     if (folderId !== 'null') {
-      let exclude = type === 'folder' ? `{"id":${folderId}` : null;
+      let exclude = type === 'folder' ? `{"id":%${folderId}` : null;
       folders = await db.query(
         `
         SELECT * FROM Folders

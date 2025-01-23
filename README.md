@@ -10,7 +10,7 @@ Server for Jotter web and Android app.
 
 Language: JavaScript
 
-Nodejs, MySQL, Sequelize, Express, JsonWebToken, Bcrypt, Base-64.
+Nodejs, Express, MySQL, Sequelize, JsonWebToken, Bcrypt, Base-64.
 
 ## API
 
@@ -45,6 +45,13 @@ GET /jotter/note/f/:folderId // get notes in folder
 POST /jotter/note
 PATCH /jotter/note/:noteId
 DELETE /jotter/note/:noteId
+```
+
+Config (all endpoints use bearer auth)
+
+```javascript
+GET /jotter/config // get user's configs
+PATCH /jotter/config
 ```
 
 ### `/login` POST request example (basic auth)
@@ -118,8 +125,18 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
+### `/config` PATCH request example (bearer auth)
+
+```json
+{
+  "sort": "1" // this will update the user's sort configuration
+}
+```
+
 ### Changelog
 
+- 2.0.0 (2025-01-23, 5:37am) - Added Config model and routes
+- 1.0.1 (2025-01-20, 4:40pm) - Added auth and folder tests
 - 1.0.0 (2024-12-24, 6:46pm) - Users can edit, move, and delete folders
 - 0.0.4 (2024-12-21, 2:28am) - Users can add folders
 - 0.0.3 (2024-12-18, 3:20pm) - Users can add and edits notes

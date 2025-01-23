@@ -22,10 +22,7 @@ app.get('/', (req, res) => res.status(200).send('default route is working'));
 app.use('/jotter', jotterAuth);
 app.use('/jotter/folder', jotter.folderRouter);
 app.use('/jotter/note', jotter.noteRouter);
-
-// app.use('*', (req, res) => {
-//   res.status(404).json({ error: 'Route not found' });
-// });
+app.use('/jotter/config', jotter.configRouter);
 
 // Handle errors
 app.use(handle400);
