@@ -15,9 +15,9 @@ const ConfigModel = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
     },
     theme: {
-      type: DataTypes.ENUM('light', 'dark', 'auto'),
+      type: DataTypes.ENUM('light', 'dark', 'system'),
       allowNull: false,
-      defaultValue: 'auto',
+      defaultValue: 'system',
     },
     highlightActiveLine: {
       type: DataTypes.BOOLEAN,
@@ -50,9 +50,9 @@ const ConfigModel = (sequelize, DataTypes) => {
       defaultValue: '14',
     },
     gridSize: {
-      type: DataTypes.ENUM('1', '2', '3', '4'),
+      type: DataTypes.ENUM('1', '2'),
       allowNull: false,
-      defaultValue: '3',
+      defaultValue: '1',
     },
   });
 };
