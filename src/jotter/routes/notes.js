@@ -29,7 +29,7 @@ async function getNote(req, res, next) {
 async function getAllInRoot(req, res, next) {
   try {
     let uConfigs = await Config.findOne({ where: { userId: req.user.id } });
-    let order = sort(uConfigs.sort);
+    let order = sort(uConfigs.sort) || [['createdAt', 'DESC']];
     let allNotesInRoot = await Note.findAll({
       where: {
         userId: req.user.id,
