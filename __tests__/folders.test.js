@@ -48,8 +48,7 @@ describe('Folders', () => {
   test('/getFolder - user cannot access another user\'s folder', async () => {
     let response = await request.get('/jotter/folder/1').set('Authorization', `Bearer ${user2.token}`);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toBeNull();
+    expect(response.status).toBe(403);
   });
 
   test('/folder - create a folder in root (home) folder', async () => {

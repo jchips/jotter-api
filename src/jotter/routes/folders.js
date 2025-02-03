@@ -24,10 +24,15 @@ async function getFolder(req, res, next) {
     let { folderId } = req.params;
     let folder = await Folder.findOne({
       where: {
-        userId: req.user.id,
         id: folderId,
       },
     });
+    if (!folder) {
+      res.status(404).json({ message: 'Content not found' });
+    }
+    if (folder.userId !== req.user.id) {
+      res.status(403).json({ message: 'Forbidden access' });
+    }
     res.status(200).json(folder);
   } catch (err) {
     next(err);
@@ -109,7 +114,7 @@ async function updateFolder(req, res, next) {
   try {
     let { folderId } = req.params;
     let newUpdates = req.body;
-    let folder = await Folder.findOne({ where: { id: folderId } });
+    let folder = await Folder.findOne({ where: { userId: req.user.id, id: folderId } });
     let update = await folder.update(newUpdates);
     res.status(200).json(update);
   } catch (err) {
@@ -122,6 +127,7 @@ async function deleteFolder(req, res, next) {
     let { folderId } = req.params;
     await Folder.destroy({
       where: {
+        userId: req.user.id,
         [Op.or]: [
           { id: folderId },
           { parentId: folderId },

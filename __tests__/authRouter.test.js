@@ -60,6 +60,13 @@ describe('Login', () => {
   });
 });
 
+test('bearer auth fails with unknown token', async () => {
+  const response = await request.get('/jotter').set('Authorization', `Bearer ${person.token}`);
+
+  expect(response.status).toBe(500);
+  expect(response.body.message).toEqual('jwt malformed');
+});
+
 describe('Check auth', () => {
   test('check for cookie', async () => {
     const loginRes = await request.post('/jotter/login').auth(person.email, person.password);

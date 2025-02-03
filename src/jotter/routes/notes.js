@@ -21,6 +21,12 @@ async function getNote(req, res, next) {
   try {
     let { noteId } = req.params;
     let note = await Note.findOne({ where: { id: noteId } });
+    if (!note) {
+      res.status(404).json({ message: 'Content not found' });
+    }
+    if (note.userId !== req.user.id) {
+      res.status(403).json({ message: 'Forbidden access' });
+    }
     res.status(200).json(note);
   } catch (err) {
     next(err);
@@ -29,7 +35,7 @@ async function getNote(req, res, next) {
 async function getAllInRoot(req, res, next) {
   try {
     let uConfigs = await Config.findOne({ where: { userId: req.user.id } });
-    let order = sort(uConfigs.sort);
+    let order = sort(uConfigs.sort) || [['createdAt', 'DESC']];
     let allNotesInRoot = await Note.findAll({
       where: {
         userId: req.user.id,
@@ -75,7 +81,7 @@ async function updateNote(req, res, next) {
   try {
     let { noteId } = req.params;
     let newUpdates = req.body;
-    let note = await Note.findOne({ where: { id: noteId } });
+    let note = await Note.findOne({ where: { userId: req.user.id, id: noteId } });
     let update = await note.update(newUpdates);
     res.status(200).json(update);
   } catch (err) {
@@ -86,8 +92,11 @@ async function updateNote(req, res, next) {
 async function deleteNote(req, res, next) {
   try {
     let { noteId } = req.params;
-    await Note.destroy({ where: { id: noteId } });
-    res.status(200).json({ message: 'deleted note' });
+    let note = await Note.destroy({ where: { userId: req.user.id, id: noteId } });
+    if (note === 0) {
+      res.status(404).json({ message: 'Content Not Found' });
+    }
+    res.status(200).json({ message: 'Deleted Note' });
   } catch (err) {
     next(err);
   }

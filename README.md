@@ -129,12 +129,15 @@ if `folderId` is null, that will add note to root folder.
 
 ```json
 {
-  "sort": "1" // this will update the user's sort configuration
+  "sort": "1"
 }
 ```
 
+The request above will update the user's sort configuration.
+
 ### Changelog
 
+- 2.0.1 (2025-02-02, 5:05pm) - Security patch, added tests
 - 2.0.0 (2025-01-23, 5:37am) - Added Config model and routes
 - 1.0.1 (2025-01-20, 4:40pm) - Added auth and folder tests
 - 1.0.0 (2024-12-24, 6:46pm) - Users can edit, move, and delete folders
