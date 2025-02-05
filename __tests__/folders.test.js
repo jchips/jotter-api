@@ -51,7 +51,7 @@ describe('Folders', () => {
     expect(response.status).toBe(403);
   });
 
-  test('/folder - create a folder in root (home) folder', async () => {
+  test('/addFolder - create a folder in root (home) folder', async () => {
     let newFolder = {
       title: 'second-folder',
       userId: 1,
@@ -65,7 +65,7 @@ describe('Folders', () => {
     expect(response.body.parentId).toBeNull();
   });
 
-  test('/folder - create a nested folder', async () => {
+  test('/addFolder - create a nested folder', async () => {
     let newFolder = {
       title: 'nested-folder',
       userId: 1,
@@ -103,5 +103,43 @@ describe('Folders', () => {
     expect(response.status).toBe(200);
     expect(response.body.length).toEqual(1);
     expect(response.body[0].title).toEqual('second-folder');
+  });
+
+  test('/updateFolder - update specified folder', async () => {
+    await request.patch('/jotter/folder/2').set('Authorization', `Bearer ${user1.token}`).send({ title: 'new folder name' });
+    let response = await request.get('/jotter/folder/2').set('Authorization', `Bearer ${user1.token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.id).toEqual(2);
+    expect(response.body.title).toEqual('new folder name');
+  });
+
+  test('/updateFolder - user cannot update another user\'s folder', async () => {
+    let response = await request.patch('/jotter/folder/1').set('Authorization', `Bearer ${user2.token}`).send({ title: 'this folder has been edited' });
+
+    expect(response.status).toBe(500);
+  });
+
+  test('/deleteFolder - delete specified folder', async () => {
+    let response1 = await request.delete('/jotter/folder/1').set('Authorization', `Bearer ${user1.token}`);
+    let response2 = await request.get('/jotter/folder/1').set('Authorization', `Bearer ${user1.token}`);
+
+    expect(response1.status).toBe(200);
+    expect(response2.status).toBe(404);
+    expect(response1.body.message).toEqual('Deleted Folder');
+  });
+
+  test('/deleteFolder - nested folders get deleted', async () => {
+    let response = await request.get('/jotter/folder/3').set('Authorization', `Bearer ${user1.token}`);
+
+    expect(response.status).toBe(404);
+  });
+
+  test('/deleteFolder - user cannot delete another user\'s folder', async () => {
+    let response1 = await request.delete('/jotter/folder/2').set('Authorization', `Bearer ${user2.token}`);
+    let response2 = await request.get('/jotter/folder/2').set('Authorization', `Bearer ${user1.token}`);
+
+    expect(response1.status).toBe(404);
+    expect(response2.body.title).toEqual('new folder name');
   });
 });
