@@ -125,7 +125,7 @@ async function updateFolder(req, res, next) {
 async function deleteFolder(req, res, next) {
   try {
     let { folderId } = req.params;
-    await Folder.destroy({
+    let folder = await Folder.destroy({
       where: {
         userId: req.user.id,
         [Op.or]: [
@@ -135,7 +135,10 @@ async function deleteFolder(req, res, next) {
         ],
       },
     });
-    res.status(200).json({ message: 'deleted folder' });
+    if (folder === 0) {
+      res.status(404).json({ message: 'Content Not Found' });
+    }
+    res.status(200).json({ message: 'Deleted Folder' });
   } catch (err) {
     next(err);
   }
