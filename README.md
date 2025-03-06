@@ -4,13 +4,18 @@
 
 Server for Jotter web and Android app.
 
-## Author: Jelani R
+[Jotter web app](https://github.com/jchips/jotter)
+
+[Jotter Android app](https://github.com/jchips/jotter-rn)
+
+## Developer: Jelani R
 
 ## Architecture
 
 Language: JavaScript
-
-Nodejs, Express, MySQL, Sequelize, JsonWebToken, Bcrypt, Base-64.
+Server: Nodejs, Express
+Database: MySQL, Sequelize
+Auth: Bcrypt, Base-64, JsonWebToken
 
 ## API
 
