@@ -60,9 +60,9 @@ async function login(req, res, next) {
     };
     res.cookie('jwt', user.token, {
       httpOnly: true, // Prevent access via JavaScript
-      secure: false, // Use HTTPS
+      secure: true, // Use HTTPS
       sameSite: 'None', // Prevent CSRF
-      maxAge: 60 * 60 * 24 * 1000, // Token expiration time (1 day (in miliseconds))
+      maxAge: 60 * 60 * 72 * 1000, // Token expiration time (3 days (in miliseconds))
     });
     res.status(200).json(user);
   } catch (err) {
