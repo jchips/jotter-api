@@ -142,6 +142,7 @@ The request above will update the user's sort configuration.
 
 ### Changelog
 
+- 2.0.2 (2025-03-29, 7:50pm) - Extended jwt time length
 - 2.0.1 (2025-02-02, 5:05pm) - Security patch, added tests
 - 2.0.0 (2025-01-23, 5:37am) - Added Config model and routes
 - 1.0.1 (2025-01-20, 4:40pm) - Added auth and folder tests

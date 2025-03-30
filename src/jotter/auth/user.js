@@ -19,7 +19,7 @@ const userModel = (sequelize, DataTypes) => {
     token: {
       type: DataTypes.VIRTUAL,
       get() {
-        return jwt.sign({ email: this.email }, SECRET, { expiresIn: '1 day' });
+        return jwt.sign({ email: this.email }, SECRET, { expiresIn: '3d' });
       },
     },
   });
