@@ -108,7 +108,9 @@ describe('Notes', () => {
   });
 
   test('/updateNote - update specified note', async () => {
-    await request.patch('/jotter/note/1').set('Authorization', `Bearer ${user1.token}`).send({ content: 'this note has been edited' });
+    await request.patch('/jotter/note/1')
+      .set('Authorization', `Bearer ${user1.token}`)
+      .send({ content: 'this note has been edited' });
     let response = await request.get('/jotter/note/1').set('Authorization', `Bearer ${user1.token}`);
 
     expect(response.status).toBe(200);
@@ -118,7 +120,9 @@ describe('Notes', () => {
   });
 
   test('/updateNote - user cannot update another user\'s note', async () => {
-    let response = await request.patch('/jotter/note/1').set('Authorization', `Bearer ${user2.token}`).send({ content: 'this note has been edited' });
+    let response = await request.patch('/jotter/note/1')
+      .set('Authorization', `Bearer ${user2.token}`)
+      .send({ content: 'this note has been edited' });
 
     expect(response.status).toBe(500);
   });
