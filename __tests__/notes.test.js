@@ -83,6 +83,20 @@ describe('Notes', () => {
     expect(response.body.id).toEqual(3);
   });
 
+  test('/addNote - error handling', async () => {
+    let newNote = {
+      title: 'error',
+      content: 'error-test',
+      userId: 1,
+      folderId: 1,
+    };
+    jest.spyOn(Note, 'create').mockRejectedValue(new Error('Database error'));
+    let response = await request.post('/jotter/note').set('Authorization', `Bearer ${user1.token}`).send(newNote);
+    Note.create.mockRestore();
+
+    expect(response.status).toBe(500);
+  });
+
   test('/getAllInRoot - fetch all notes in the root folder', async () => {
     let response = await request.get('/jotter/note').set('Authorization', `Bearer ${user1.token}`);
 
@@ -92,6 +106,14 @@ describe('Notes', () => {
     expect(response.body[1].folderId).toBeNull();
   });
 
+  test('/getAllInRoot - error handling', async () => {
+    jest.spyOn(Note, 'findAll').mockRejectedValue(new Error('Database error'));
+    let response = await request.get('/jotter/note').set('Authorization', `Bearer ${user1.token}`);
+    Note.findAll.mockRestore();
+
+    expect(response.status).toBe(500);
+  });
+
   test('/getAllInFolder - fetch all notes in specified folder', async () => {
     let response = await request.get('/jotter/note/f/1').set('Authorization', `Bearer ${user1.token}`);
 
@@ -99,6 +121,14 @@ describe('Notes', () => {
     expect(response.body.length).toEqual(1);
     expect(response.body[0].folderId).toEqual(1);
     expect(response.body[0].title).toEqual('new-note');
+  });
+
+  test('/getAllInFolders - error handling', async () => {
+    jest.spyOn(Note, 'findAll').mockRejectedValue(new Error('Database error'));
+    let response = await request.get('/jotter/note/f/1').set('Authorization', `Bearer ${user1.token}`);
+    Note.findAll.mockRestore();
+
+    expect(response.status).toBe(500);
   });
 
   test('/getNote - user cannot access another user\'s note', async () => {
