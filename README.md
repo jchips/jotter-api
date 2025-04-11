@@ -1,7 +1,5 @@
 # Jotter
 
-## Description
-
 Server for Jotter web and Android app.
 
 [Jotter web app](https://github.com/jchips/jotter)
@@ -12,10 +10,10 @@ Server for Jotter web and Android app.
 
 ## Architecture
 
-Language: JavaScript
-Server: Nodejs, Express
-Database: MySQL, Sequelize
-Auth: Bcrypt, Base-64, JsonWebToken
+- Language: JavaScript
+- Server: Nodejs, Express
+- Database: MySQL, Sequelize
+- Auth: Bcrypt, Base-64, JsonWebToken
 
 ## API
 
@@ -142,6 +140,7 @@ The request above will update the user's sort configuration.
 
 ### Changelog
 
+- 2.0.4 (2025-04-06, 3:40pm) - Added tests
 - 2.0.3 (2025-04-01, 2:05am) - Added config route tests
 - 2.0.2 (2025-03-29, 7:50pm) - Extended jwt time length
 - 2.0.1 (2025-02-02, 5:05pm) - Security patch, added tests

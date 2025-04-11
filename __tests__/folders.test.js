@@ -80,6 +80,20 @@ describe('Folders', () => {
     expect(response.body.path).toEqual([{ id: 1, title: 'first-folder' }]);
   });
 
+  test('/addFolder - error handling', async () => {
+    let newFolder = {
+      title: 'error',
+      userId: 1,
+      parentId: null,
+      path: [],
+    };
+    jest.spyOn(Folder, 'create').mockRejectedValue(new Error('Database error'));
+    let response = await request.post('/jotter/folder').set('Authorization', `Bearer ${user1.token}`).send(newFolder);
+    Folder.create.mockRestore();
+
+    expect(response.status).toBe(500);
+  });
+
   test('/getFolders - gets all child folders of root (home) folder', async () => {
     let response = await request.get('/jotter/folder/f/null').set('Authorization', `Bearer ${user1.token}`);
 
@@ -97,12 +111,35 @@ describe('Folders', () => {
     expect(response.body[0].path).toEqual([{ id: 1, title: 'first-folder' }]);
   });
 
+  test('/getFolders - error handling', async () => {
+    jest.spyOn(Folder, 'findAll').mockRejectedValue(new Error('Database error'));
+    let response = await request.get('/jotter/folder/f/1').set('Authorization', `Bearer ${user1.token}`);
+    Folder.findAll.mockRestore();
+
+    expect(response.status).toBe(500);
+  });
+
   test('/getAllOtherFolders - gets all folders that are not inner folders of specified folder and not the specified folder itself', async () => {
     let response = await request.get('/jotter/folder/all/folder/1').set('Authorization', `Bearer ${user1.token}`);
 
     expect(response.status).toBe(200);
     expect(response.body.length).toEqual(1);
     expect(response.body[0].title).toEqual('second-folder');
+  });
+
+  test('/getAllOtherFolders - gets all folders', async () => {
+    let response = await request.get('/jotter/folder/all/folder/null').set('Authorization', `Bearer ${user1.token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.length).toEqual(3);
+  });
+
+  test('/getAllOtherFolders - error handling', async () => {
+    jest.spyOn(Folder, 'findAll').mockRejectedValue(new Error('Database error'));
+    let response = await request.get('/jotter/folder/all/folder/null').set('Authorization', `Bearer ${user1.token}`);
+    Folder.findAll.mockRestore();
+
+    expect(response.status).toBe(500);
   });
 
   test('/updateFolder - update specified folder', async () => {

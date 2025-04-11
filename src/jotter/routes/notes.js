@@ -32,6 +32,7 @@ async function getNote(req, res, next) {
     next(err);
   }
 }
+
 async function getAllInRoot(req, res, next) {
   try {
     let uConfigs = await Config.findOne({ where: { userId: req.user.id } });

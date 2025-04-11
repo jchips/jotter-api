@@ -28,7 +28,7 @@ afterAll(async () => {
 });
 
 describe('Configurations', () => {
-  test('/getConfigs - Fetch all configurations for given user', async () => {
+  test('/getConfigs - fetch all configurations for given user', async () => {
     let response = await request.get('/jotter/config').set('Authorization', `Bearer ${user1.token}`);
 
     expect(response.status).toBe(200);
@@ -38,7 +38,7 @@ describe('Configurations', () => {
     expect(response.body.hidePreview).toEqual(false);
   });
 
-  test('/getConfigs - Error handling', async () => {
+  test('/getConfigs - error handling', async () => {
     jest.spyOn(Config, 'findOne').mockRejectedValue(new Error('Database error'));
     let response = await request.get('/jotter/config').set('Authorization', `Bearer ${user1.token}`);
     Config.findOne.mockRestore();
@@ -46,7 +46,7 @@ describe('Configurations', () => {
     expect(response.status).toBe(500);
   });
 
-  test('/updateConfigs - Update a user configuration', async () => {
+  test('/updateConfigs - update a user configuration', async () => {
     await request.patch('/jotter/config')
       .set('Authorization', `Bearer ${user1.token}`)
       .send({ gridSize: '2' });
@@ -56,7 +56,7 @@ describe('Configurations', () => {
     expect(response.body.gridSize).toEqual('2');
   });
 
-  test('/updateConfigs - Error handling', async () => {
+  test('/updateConfigs - error handling', async () => {
     jest.spyOn(Config, 'findOne').mockRejectedValue(new Error('Database error'));
     let updateRes = await request.patch('/jotter/config')
       .set('Authorization', `Bearer ${user1.token}`)

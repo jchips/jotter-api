@@ -14,12 +14,12 @@ const ConfigModel = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    theme: {
+    theme: { // TODO
       type: DataTypes.ENUM('light', 'dark', 'system'),
       allowNull: false,
       defaultValue: 'system',
     },
-    highlightActiveLine: {
+    highlightActiveLine: { // TODO
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
@@ -39,12 +39,12 @@ const ConfigModel = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: false,
     },
-    font: {
+    font: { // TODO
       type: DataTypes.ENUM('Inter'),
       allowNull: false,
       defaultValue: 'Inter',
     },
-    fontSize: {
+    fontSize: { // TODO
       type: DataTypes.ENUM('12', '13', '14', '15', '16'),
       allowNull: false,
       defaultValue: '14',
