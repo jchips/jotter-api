@@ -13,9 +13,9 @@ router.get('/', bearerAuth, checkAuthentication);
 router.post('/signup', signup);
 router.post('/login', basicAuth, login);
 router.post('/logout', logout);
+router.delete('/delete/:userId', bearerAuth, deleteUser);
 
 // HANDLERS==================
-// Sign up
 async function signup(req, res, next) {
   let transaction;
   try {
@@ -51,7 +51,6 @@ async function checkForEmail(email) {
   }
 }
 
-// Log in
 async function login(req, res, next) {
   try {
     const user = {
@@ -81,7 +80,7 @@ async function checkAuthentication(req, res, next) {
       });
       res.status(200).json(req.user);
     } else {
-      res.status(403).json({ message: 'not authorized' });
+      res.status(401).json({ message: 'Not authenticated' });
     }
   } catch (err) {
     next(err);
@@ -92,6 +91,24 @@ async function logout(req, res, next) {
   try {
     res.clearCookie('jwt'); // Clear the HTTP-only cookie
     res.json({ message: 'Logged out successfully' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function deleteUser(req, res, next) {
+  try {
+    const { userId } = req.params;
+    if (Number(userId) !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+    let user = await User.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.clearCookie('jwt'); // Clear the HTTP-only cookie
+    await user.destroy();
+    res.status(200).json({ message: 'Deleted User ' + userId });
   } catch (err) {
     next(err);
   }
