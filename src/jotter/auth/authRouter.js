@@ -100,7 +100,7 @@ async function deleteUser(req, res, next) {
   try {
     const { userId } = req.params;
     if (Number(userId) !== req.user.id) {
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Not authorized' });
     }
     let user = await User.findOne({ where: { id: userId } });
     if (!user) {

@@ -26,6 +26,7 @@ GET /jotter // check auth - uses bearer auth
 POST /jotter/signup
 POST /jotter/login // uses basic auth
 POST /jotter/logout
+DELETE /jotter/delete/:userId // uses bearer auth
 ```
 
 Folders (all endpoints use bearer auth)
@@ -140,6 +141,7 @@ The request above will update the user's sort configuration.
 
 ### Changelog
 
+- 2.1.0 (2025-04-16, 10:40pm) - Added delete user request, improved error handling
 - 2.0.4 (2025-04-06, 3:40pm) - Added tests
 - 2.0.3 (2025-04-01, 2:05am) - Added config route tests
 - 2.0.2 (2025-03-29, 7:50pm) - Extended jwt time length
