@@ -26,7 +26,7 @@ Folder.belongsTo(User, {
   onUpdate: 'CASCADE',
 });
 
-// Note-Folder
+// Folder-Note
 Folder.hasMany(Note, {
   foreignKey: 'folderId',
   onDelete: 'CASCADE',
@@ -38,7 +38,7 @@ Note.belongsTo(Folder, {
   onUpdate: 'CASCADE',
 });
 
-// Note-User
+// User-Note
 User.hasMany(Note, {
   foreignKey: 'userId',
   onDelete: 'CASCADE',
