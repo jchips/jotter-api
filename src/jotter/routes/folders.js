@@ -17,7 +17,6 @@ router.post('/', bearerAuth, addFolder);
 router.patch('/:folderId', bearerAuth, updateFolder);
 router.delete('/:folderId', bearerAuth, deleteFolder);
 
-
 // HANDLERS==================
 async function getFolder(req, res, next) {
   try {
@@ -28,10 +27,10 @@ async function getFolder(req, res, next) {
       },
     });
     if (!folder) {
-      res.status(404).json({ message: 'Content not found' });
+      return res.status(404).json({ message: 'Content not found' });
     }
     if (folder.userId !== req.user.id) {
-      res.status(403).json({ message: 'Forbidden access' });
+      return res.status(403).json({ message: 'Not authorized' });
     }
     res.status(200).json(folder);
   } catch (err) {
@@ -39,7 +38,7 @@ async function getFolder(req, res, next) {
   }
 }
 
-// Get all folders inside parent folder
+// Fetches all folders inside parent folder
 async function getFolders(req, res, next) {
   try {
     let { parentId } = req.params;
@@ -60,10 +59,9 @@ async function getFolders(req, res, next) {
 }
 
 /**
- * Get all folders from user that are not the current folder and that do not
+ * Fetches all folders from user that are not the current folder and that do not
  * contain the current folder in the path (no children/inner folders)
  * If the root folder is given, sends all folders
- * TODO: switch to Sequelize literal instead of raw query
  */
 async function getAllOtherFolders(req, res, next) {
   try {
@@ -116,6 +114,9 @@ async function updateFolder(req, res, next) {
     let { folderId } = req.params;
     let newUpdates = req.body;
     let folder = await Folder.findOne({ where: { userId: req.user.id, id: folderId } });
+    if (!folder) {
+      return res.status(404).json({ message: 'Content not found' });
+    }
     let update = await folder.update(newUpdates);
     res.status(200).json(update);
   } catch (err) {
@@ -137,7 +138,7 @@ async function deleteFolder(req, res, next) {
       },
     });
     if (folder === 0) {
-      res.status(404).json({ message: 'Content Not Found' });
+      return res.status(404).json({ message: 'Content Not Found' });
     }
     res.status(200).json({ message: 'Deleted Folder' });
   } catch (err) {

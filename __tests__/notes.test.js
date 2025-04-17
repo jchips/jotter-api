@@ -154,7 +154,7 @@ describe('Notes', () => {
       .set('Authorization', `Bearer ${user2.token}`)
       .send({ content: 'this note has been edited' });
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(404);
   });
 
   test('/deleteNote - delete specified note', async () => {

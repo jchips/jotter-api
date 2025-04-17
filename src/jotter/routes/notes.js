@@ -22,10 +22,10 @@ async function getNote(req, res, next) {
     let { noteId } = req.params;
     let note = await Note.findOne({ where: { id: noteId } });
     if (!note) {
-      res.status(404).json({ message: 'Content not found' });
+      return res.status(404).json({ message: 'Content not found' });
     }
     if (note.userId !== req.user.id) {
-      res.status(403).json({ message: 'Forbidden access' });
+      return res.status(403).json({ message: 'Not authorized' });
     }
     res.status(200).json(note);
   } catch (err) {
@@ -36,7 +36,7 @@ async function getNote(req, res, next) {
 async function getAllInRoot(req, res, next) {
   try {
     let uConfigs = await Config.findOne({ where: { userId: req.user.id } });
-    let order = sort(uConfigs.sort) || [['createdAt', 'DESC']];
+    let order = uConfigs ? sort(uConfigs.sort) : [['createdAt', 'DESC']];
     let allNotesInRoot = await Note.findAll({
       where: {
         userId: req.user.id,
@@ -54,7 +54,7 @@ async function getAllInFolder(req, res, next) {
   try {
     let { folderId } = req.params;
     let uConfigs = await Config.findOne({ where: { userId: req.user.id } });
-    let order = sort(uConfigs.sort);
+    let order = uConfigs ? sort(uConfigs.sort) : [['createdAt', 'DESC']];
     let allNotesInFolder = await Note.findAll({
       where: {
         userId: req.user.id,
@@ -83,6 +83,9 @@ async function updateNote(req, res, next) {
     let { noteId } = req.params;
     let newUpdates = req.body;
     let note = await Note.findOne({ where: { userId: req.user.id, id: noteId } });
+    if (!note) {
+      return res.status(404).json({ message: 'Content not found' });
+    }
     let update = await note.update(newUpdates);
     res.status(200).json(update);
   } catch (err) {
@@ -95,7 +98,7 @@ async function deleteNote(req, res, next) {
     let { noteId } = req.params;
     let note = await Note.destroy({ where: { userId: req.user.id, id: noteId } });
     if (note === 0) {
-      res.status(404).json({ message: 'Content Not Found' });
+      return res.status(404).json({ message: 'Content Not Found' });
     }
     res.status(200).json({ message: 'Deleted Note' });
   } catch (err) {

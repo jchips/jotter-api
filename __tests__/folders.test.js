@@ -154,7 +154,7 @@ describe('Folders', () => {
   test('/updateFolder - user cannot update another user\'s folder', async () => {
     let response = await request.patch('/jotter/folder/1').set('Authorization', `Bearer ${user2.token}`).send({ title: 'this folder has been edited' });
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(404);
   });
 
   test('/deleteFolder - delete specified folder', async () => {
