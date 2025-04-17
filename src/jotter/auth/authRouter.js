@@ -19,12 +19,12 @@ router.delete('/delete/:userId', bearerAuth, deleteUser);
 async function signup(req, res, next) {
   let transaction;
   try {
-    transaction = await db.transaction();
     let signupInfo = req.body;
     let emailTaken = await checkForEmail(req.body.email);
     if (emailTaken) {
       return res.json({ message: 'email is already being used' });
     }
+    transaction = await db.transaction();
     let newUser = await User.create(signupInfo, { transaction });
     let newConfigs = { userId: newUser.id };
     await Config.create(newConfigs, { transaction });
