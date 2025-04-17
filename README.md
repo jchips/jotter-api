@@ -99,14 +99,14 @@ if `folderId` is null, that will add note to root folder.
   "parentId": 5,
   "path": [
     {
-      "id": 3,
+      "id": 5,
       "title": "shopping"
     }
   ]
 },
 ```
 
-`path` column automatically turns into type LONGTEXT in the database, so be sure to use `JSON.parse()` when grabbing path from database.
+`path` column automatically turns into type LONGTEXT in the database, so be sure to parse to JSON when grabbing path from database.
 
 ### `/folder` PATCH request example (bearer auth)
 

@@ -60,8 +60,8 @@ async function getFolders(req, res, next) {
 }
 
 /**
- * Get all folders from user that aren't the current folder and that don't
- * contain the current folder in the path (aren't children/inner folders)
+ * Get all folders from user that are not the current folder and that do not
+ * contain the current folder in the path (no children/inner folders)
  * If the root folder is given, sends all folders
  * TODO: switch to Sequelize literal instead of raw query
  */
