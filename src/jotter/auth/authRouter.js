@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const bcrypt = require('bcrypt');
 const { User, Config } = require('../models');
 const db = require('../db');
 const basicAuth = require('./middleware/basic');
@@ -13,6 +14,7 @@ router.get('/', bearerAuth, checkAuthentication);
 router.post('/signup', signup);
 router.post('/login', basicAuth, login);
 router.post('/logout', logout);
+router.patch('/update/:userId', bearerAuth, updateUser);
 router.delete('/delete/:userId', bearerAuth, deleteUser);
 
 // HANDLERS==================
@@ -96,6 +98,32 @@ async function logout(req, res, next) {
   }
 }
 
+async function updateUser(req, res, next) {
+  try {
+    const { userId } = req.params;
+    const reqBody = req.body;
+    if (Number(userId) !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+    let user = await User.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    let updates = {};
+    if (reqBody.email && reqBody.email !== user.email) {
+      updates.email = reqBody.email;
+    }
+    if (reqBody.password) {
+      const hashedNewPass = await bcrypt.hash(reqBody.password, 10);
+      updates.password = hashedNewPass;
+    }
+    const updatedUser = await user.update(updates);
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function deleteUser(req, res, next) {
   try {
     const { userId } = req.params;
@@ -108,7 +136,7 @@ async function deleteUser(req, res, next) {
     }
     res.clearCookie('jwt'); // Clear the HTTP-only cookie
     await user.destroy();
-    res.status(200).json({ message: 'Deleted User ' + userId });
+    res.status(200).json({ message: 'Deleted user ' + userId });
   } catch (err) {
     next(err);
   }
