@@ -15,7 +15,7 @@ router.post('/signup', signup);
 router.post('/login', basicAuth, login);
 router.post('/logout', logout);
 router.patch('/update/:userId', bearerAuth, updateUser);
-router.delete('/delete/:userId', bearerAuth, deleteUser);
+router.post('/deleteuser/:userId', bearerAuth, deleteUser);
 
 // HANDLERS==================
 async function signup(req, res, next) {
@@ -112,7 +112,7 @@ async function updateUser(req, res, next) {
     let updates = {};
     const validateUser = await bcrypt.compare(reqBody.password, user.password);
     if (!validateUser) {
-      return res.status(404).json({ message: 'Invalid password' });
+      return res.status(404).json({ message: 'Incorrect password' });
     }
     if (reqBody.email && reqBody.email !== user.email) {
       updates.email = reqBody.email;
@@ -131,12 +131,17 @@ async function updateUser(req, res, next) {
 async function deleteUser(req, res, next) {
   try {
     const { userId } = req.params;
+    const reqBody = req.body;
     if (Number(userId) !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized' });
     }
     let user = await User.findOne({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+    const validateUser = await bcrypt.compare(reqBody.password, user.password);
+    if (!validateUser) {
+      return res.status(404).json({ message: 'Incorrect password' });
     }
     res.clearCookie('jwt'); // Clear the HTTP-only cookie
     await user.destroy();
