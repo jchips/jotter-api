@@ -27,7 +27,7 @@ POST /jotter/signup
 POST /jotter/login // uses basic auth
 POST /jotter/logout
 PATCH /jotter/update/:userId // uses bearer auth
-DELETE /jotter/delete/:userId // uses bearer auth
+POST /jotter/deleteuser/:userId // uses bearer auth
 ```
 
 Folders (all endpoints use bearer auth)
@@ -59,6 +59,10 @@ GET /jotter/config // get user's configs
 PATCH /jotter/config
 ```
 
+---
+
+### Request examples
+
 ### `/login` POST request example (basic auth)
 
 ```json
@@ -68,7 +72,7 @@ PATCH /jotter/config
 }
 ```
 
-### `/update` PATCH request example (bearer auth)
+#### `/update` PATCH request example (bearer auth)
 
 ```json
 {
@@ -80,9 +84,17 @@ PATCH /jotter/config
 
 `newPassword` is an optional field (only required to change password).
 
+#### `/deleteuser` POST request example (bearer auth)
+
+```json
+{
+  "password": "password123",
+}
+```
+
 ---
 
-### `/note` POST request example (bearer auth)
+#### `/note` POST request example (bearer auth)
 
 if `folderId` is null, that will add note to root folder.
 
@@ -95,7 +107,7 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
-### `/note` PATCH request example (bearer auth)
+#### `/note` PATCH request example (bearer auth)
 
 ```json
 {
@@ -106,7 +118,9 @@ if `folderId` is null, that will add note to root folder.
 
 `updatedAt` is of type DATETIME. This column is added to the database automatically when adding a folder or note.
 
-### `/folder` POST request example (bearer auth)
+---
+
+#### `/folder` POST request example (bearer auth)
 
 ```json
 {
@@ -124,7 +138,7 @@ if `folderId` is null, that will add note to root folder.
 
 `path` column automatically turns into type LONGTEXT in the database, so be sure to parse to JSON when grabbing path from database.
 
-### `/folder` PATCH request example (bearer auth)
+#### `/folder` PATCH request example (bearer auth)
 
 ```json
 {
@@ -133,7 +147,7 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
-### Another `/folder` PATCH request example (bearer auth)
+#### Another `/folder` PATCH request example (bearer auth)
 
 ```json
 {
@@ -144,7 +158,9 @@ if `folderId` is null, that will add note to root folder.
 }
 ```
 
-### `/config` PATCH request example (bearer auth)
+---
+
+#### `/config` PATCH request example (bearer auth)
 
 ```json
 {
@@ -154,7 +170,7 @@ if `folderId` is null, that will add note to root folder.
 
 The request above will update the user's sort configuration.
 
-### Changelog
+## Changelog
 
 - 2.1.1 (2025-04-27, 6:10pm) - Added update user request
 - 2.1.0 (2025-04-16, 10:40pm) - Added delete user request, improved error handling
