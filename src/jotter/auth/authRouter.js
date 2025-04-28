@@ -110,11 +110,15 @@ async function updateUser(req, res, next) {
       return res.status(404).json({ message: 'User not found' });
     }
     let updates = {};
+    const validateUser = await bcrypt.compare(reqBody.password, user.password);
+    if (!validateUser) {
+      return res.status(404).json({ message: 'Invalid password' });
+    }
     if (reqBody.email && reqBody.email !== user.email) {
       updates.email = reqBody.email;
     }
-    if (reqBody.password) {
-      const hashedNewPass = await bcrypt.hash(reqBody.password, 10);
+    if (reqBody.newPassword) {
+      const hashedNewPass = await bcrypt.hash(reqBody.newPassword, 10);
       updates.password = hashedNewPass;
     }
     const updatedUser = await user.update(updates);
