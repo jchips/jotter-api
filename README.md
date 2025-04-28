@@ -26,6 +26,7 @@ GET /jotter // check auth - uses bearer auth
 POST /jotter/signup
 POST /jotter/login // uses basic auth
 POST /jotter/logout
+PATCH /jotter/update/:userId // uses bearer auth
 DELETE /jotter/delete/:userId // uses bearer auth
 ```
 
@@ -62,10 +63,24 @@ PATCH /jotter/config
 
 ```json
 {
-  "email": "myEmail@gmail.com",
+  "email": "user@gmail.com",
   "password": "password123"
 }
 ```
+
+### `/update` PATCH request example (bearer auth)
+
+```json
+{
+  "email": "user@gmail.com",
+  "password": "password123",
+  "newPassword": "password246"
+}
+```
+
+`newPassword` is an optional field (only required to change password).
+
+---
 
 ### `/note` POST request example (bearer auth)
 
@@ -141,6 +156,7 @@ The request above will update the user's sort configuration.
 
 ### Changelog
 
+- 2.1.1 (2025-04-27, 6:10pm) - Added update user request
 - 2.1.0 (2025-04-16, 10:40pm) - Added delete user request, improved error handling
 - 2.0.4 (2025-04-06, 3:40pm) - Added tests
 - 2.0.3 (2025-04-01, 2:05am) - Added config route tests
