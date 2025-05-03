@@ -23,8 +23,11 @@ async function getConfigs(req, res, next) {
 async function updateConfigs(req, res, next) {
   try {
     let configs = req.body;
-    let user = await Config.findOne({ where: { userId: req.user.dataValues.id } });
-    let update = await user.update(configs); // { sort: '1' }
+    let userConfigs = await Config.findOne({ where: { userId: req.user.dataValues.id } });
+    if (!userConfigs) {
+      return res.status(404).json({ message: 'User configurations not found' });
+    }
+    let update = await userConfigs.update(configs); // { sort: '1' }
     res.status(200).json(update);
   } catch (err) {
     next(err);

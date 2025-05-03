@@ -3,9 +3,9 @@
 const { User } = require('../../models');
 
 /**
- * Middleware that authenticates a user using bearer auth.
- * If the user is authenticated, it stores the user (object) in `req.user`
- * and stores the user's token in `req.token`
+ * Authenticates a user using bearer auth.
+ * If user is authenticated, stores user (object) in `req.user`
+ * and stores the user's token in `req.token`.
  * Otherwise, sends error.
  */
 async function bearerAuth(req, res, next) {

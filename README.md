@@ -1,4 +1,4 @@
-# Jotter
+# Jotter API
 
 Server for Jotter web and Android app.
 
@@ -63,7 +63,7 @@ PATCH /jotter/config
 
 ### Request examples
 
-### `/login` POST request example (basic auth)
+#### `/login` POST request example (basic auth)
 
 ```json
 {
@@ -96,7 +96,7 @@ PATCH /jotter/config
 
 #### `/note` POST request example (bearer auth)
 
-if `folderId` is null, that will add note to root folder.
+if `folderId` is null, note will be added to root folder.
 
 ```json
 {
@@ -172,15 +172,15 @@ The request above will update the user's sort configuration.
 
 ## Changelog
 
-- 2.1.1 (2025-04-27, 6:10pm) - Added update user request
-- 2.1.0 (2025-04-16, 10:40pm) - Added delete user request, improved error handling
-- 2.0.4 (2025-04-06, 3:40pm) - Added tests
-- 2.0.3 (2025-04-01, 2:05am) - Added config route tests
-- 2.0.2 (2025-03-29, 7:50pm) - Extended jwt time length
-- 2.0.1 (2025-02-02, 5:05pm) - Security patch, added tests
-- 2.0.0 (2025-01-23, 5:37am) - Added Config model and routes
+- 1.2.1 (2025-04-27, 6:10pm) - Users can change email/password
+- 1.2.0 (2025-04-16, 10:40pm) - Users can delete account, improved error handling
+- 1.1.4 (2025-04-06, 3:40pm) - Added tests
+- 1.1.3 (2025-04-01, 2:05am) - Added config route tests
+- 1.1.2 (2025-03-29, 7:50pm) - Extended jwt time length
+- 1.1.1 (2025-02-02, 5:05pm) - Security patch, added tests
+- 1.1.0 (2025-01-23, 5:37am) - Added Config model and routes
 - 1.0.1 (2025-01-20, 4:40pm) - Added auth and folder tests
 - 1.0.0 (2024-12-24, 6:46pm) - Users can edit, move, and delete folders
 - 0.0.4 (2024-12-21, 2:28am) - Users can add folders
-- 0.0.3 (2024-12-18, 3:20pm) - Users can add and edits notes
-- 0.0.1 (2024-12-15, 7:03pm) - First commit with working authentication
+- 0.0.3 (2024-12-18, 3:20pm) - Users can add and edit notes
+- 0.0.1 (2024-12-15, 7:03pm) - First commit, working authentication
