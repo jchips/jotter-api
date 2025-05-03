@@ -2,7 +2,7 @@
 
 // Code inspired from https://stackoverflow.com/questions/24897801/enable-access-control-allow-origin-for-multiple-domains-in-node-js
 module.exports = (req, res, next) => {
-  const allowedOrigins = ['https://jotternote.netlify.app', 'http://localhost:5173']; // localhost for testing
+  const allowedOrigins = ['http://localhost:5173']; // localhost for testing
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
