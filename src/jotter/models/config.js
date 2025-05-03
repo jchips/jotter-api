@@ -14,12 +14,12 @@ const ConfigModel = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    theme: { // TODO
+    theme: { // not using
       type: DataTypes.ENUM('light', 'dark', 'system'),
       allowNull: false,
       defaultValue: 'system',
     },
-    highlightActiveLine: { // TODO
+    highlightActiveLine: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,

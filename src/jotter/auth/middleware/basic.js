@@ -4,8 +4,8 @@ const base64 = require('base-64');
 const { User } = require('../../models');
 
 /**
- * Middleware that authenticates a user using basic auth.
- * If the user is authenticated, it stores the user (object) in `req.user`
+ * Authenticates a user using basic auth.
+ * If user is authenticated, stores the user (object) in `req.user`
  * Otherwise, sends error.
  */
 async function basicAuth(req, res, next) {
